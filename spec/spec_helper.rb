@@ -1,11 +1,11 @@
-require "bundler/setup"
-require "transaction_event_store_mongoid"
+$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+require 'transaction_event_store_mongoid'
+require 'pry'
+
+Mongoid.load!('./spec/config/mongoid.yml', 'test')
 
 RSpec.configure do |config|
-  # Enable flags like --only-failures and --next-failure
-  config.example_status_persistence_file_path = ".rspec_status"
-
-  config.expect_with :rspec do |c|
-    c.syntax = :expect
+  config.before do
+    Mongoid.purge!
   end
 end
