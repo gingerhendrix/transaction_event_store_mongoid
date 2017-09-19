@@ -19,7 +19,7 @@ module TransactionEventStoreMongoid
       yield
       commit_transaction
       ensure
-        @transaction_object = nil
+        set_transaction_object(nil)
     end
 
     def create(event, stream_name)
@@ -94,10 +94,20 @@ module TransactionEventStoreMongoid
 
     private
 
-    attr_reader :transaction_object
+    def transaction_object
+      Thread.current[transaction_variable_name]
+    end
+
+    def set_transaction_object(obj)
+      Thread.current[transaction_variable_name] = obj
+    end
+
+    def transaction_variable_name
+      "transaction_event_store_mongoid_transaction"
+    end
 
     def start_transaction(stream_name)
-      @transaction_object = adapter.build(stream: stream_name)
+      set_transaction_object(adapter.build(stream: stream_name))
     end
 
     def commit_transaction
@@ -105,7 +115,7 @@ module TransactionEventStoreMongoid
     end
 
     def in_transaction?
-      @transaction_object.present?
+      transaction_object.present?
     end
 
     def build_event_model(event)
