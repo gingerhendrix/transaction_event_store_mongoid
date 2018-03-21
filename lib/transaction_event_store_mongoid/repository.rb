@@ -122,8 +122,8 @@ module TransactionEventStoreMongoid
       {
         event_id:   event.event_id,
         event_type: event.class,
-        data:       event.data,
-        meta:       event.metadata,
+        data:       event.data.to_h,
+        meta:       event.metadata.to_h,
       }
     end
 
