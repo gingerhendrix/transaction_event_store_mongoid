@@ -121,7 +121,7 @@ module TransactionEventStoreMongoid
     def build_event_model(event)
       {
         event_id:   event.event_id,
-        event_type: event.class,
+        event_type: event.class.name,
         data:       event.data.to_h,
         meta:       event.metadata.to_h,
       }
